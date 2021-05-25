@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from '@material-ui/lab'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 
 import useStyle from './styles'
 
@@ -42,17 +44,32 @@ const UserList = () => {
 
     return (
         <div className={classes.container}>
-            {
-                errorMessage && 
-                <div className={classes.alert}>
-                    <Alert severity="error">
-                        <AlertTitle classes={classes.alert}><strong>Error!</strong></AlertTitle>
-                        {errorMessage}
-                    </Alert>
-                </div>
-            }
             <SearchBox searchTerm={searchTerm} handleChange={(e) => setSearchTerm(e.target.value)} handleSearch={handleSearch} />
-            <Table page={page} setPage={setPage} headCells={headCells} rows={users} totalCount={totalCount} />
+            {
+                errorMessage ?
+                    <div className={classes.alert}>
+                        <Alert
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setErrorMessage(null);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            <AlertTitle classes={classes.alert}><strong>Error!</strong></AlertTitle>
+                            {errorMessage}
+                        </Alert>
+                    </div>
+                    :
+                    totalCount ? <Table page={page} setPage={setPage} headCells={headCells} rows={users} totalCount={totalCount} /> : null
+            }
         </div>
     )
 }
